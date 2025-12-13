@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:sli.dev)",
+      "Bash(mkdir:*)",
+      "WebSearch"
+    ]
+  }
+}

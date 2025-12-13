@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SubAgentがSkillsを呼び出すパターン - Excalidraw</title>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@excalidraw/excalidraw@0.17.0/dist/excalidraw.production.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .excalidraw-wrapper {
+            height: 100vh;
+            width: 100vw;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script>
+        const { Excalidraw } = window.ExcalidrawLib;
+
+        const initialData = {
+            elements: [
+                // Title
+                {
+                    type: "text",
+                    version: 1,
+                    versionNonce: 1,
+                    id: "title",
+                    x: 100,
+                    y: 50,
+                    width: 900,
+                    height: 50,
+                    fontSize: 32,
+                    fontFamily: 1,
+                    text: "公式推奨パターン: SubAgentがSkillsを呼び出す",
+                    textAlign: "left",
+                    verticalAlign: "top",
+                    baseline: 42,
+                    strokeColor: "#1e1e1e",
+                    backgroundColor: "transparent",
+                    fillStyle: "solid",
+                    strokeWidth: 2,
+                    roughness: 0,
+                    opacity: 100,
+                    groupIds: [],
+                    strokeStyle: "solid",
+                    seed: 1,
+                    angle: 0,
+                    boundElements: null,
+                    updated: 1,
+                    link: null,
+                    locked: false
+                },
+                // SubAgent A box
+                {
+                    type: "rectangle",
+                    version: 1,
+                    versionNonce: 1,
+                    id: "subagent-a-box",
+                    x: 200,
+                    y: 150,
+                    width: 280,
+                    height: 80,
+                    angle: 0,
+                    strokeColor: "#1e4c92",
+                    backgroundColor: "#d5e5f5",
+                    fillStyle: "solid",
+                    strokeWidth: 3,
+                    roughness: 0,
+                    opacity: 100,
+                    groupIds: [],
+                    strokeStyle: "solid",
+                    seed: 1,
+                    boundElements: [],
+                    updated: 1,
+                    link: null,
+                    locked: false,
+                    roundness: { type: 3, value: 15 }
+                },
+                // SubAgent A text
+                {
+                    type: "text",
+                    version: 1,
+                    versionNonce: 1,
+                    id: "subagent-a-text",
+                    x: 270,
+                    y: 175,
+                    width: 140,
+                    height: 30,
+                    fontSize: 24,
+                    fontFamily: 1,
+                    text: "[SubAgent A]",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                    baseline: 24,
+                    strokeColor: "#1e1e1e",
+                    backgroundColor: "transparent",
+                    fillStyle: "solid",
+                    strokeWidth: 2,
+                    roughness: 0,
+                    opacity: 100,
+                    groupIds: [],
+                    strokeStyle: "solid",
+                    seed: 1,
+                    angle: 0,
+                    boundElements: null,
+                    updated: 1,
+                    link: null,
+                    locked: false
+                },
+                // SubAgent B box
+                {
+                    type: "rectangle",
+                    version: 1,
+                    versionNonce: 1,
+                    id: "subagent-b-box",
+                    x: 550,
+                    y: 150,
+                    width: 280,
+                    height: 80,
+                    angle: 0,
+                    strokeColor: "#1e4c92",
+                    backgroundColor: "#d5e5f5",
+                    fillStyle: "solid",
+                    strokeWidth: 3,
+                    roughness: 0,
+                    opacity: 100,
+                    groupIds: [],
+                    strokeStyle: "solid",
+                    seed: 1,
+                    boundElements: [],
+                    updated: 1,
+                    link: null,
+                    locked: false,
+                    roundness: { type: 3, value: 15 }
+                },
+                // SubAgent B text
+                {
+                    type: "text",
+                    version: 1,
+                    versionNonce: 1,
+                    id: "subagent-b-text",
+                    x: 620,
+                    y: 175,
+                    width: 140,
+                    height: 30,
+                    fontSize: 24,
+                    fontFamily: 1,
+                    text: "[SubAgent B]",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                    baseline: 24,
+                    strokeColor: "#1e1e1e",
+                    backgroundColor: "transparent",
+                    fillStyle: "solid",
+                    strokeWidth: 2,
+                    roughness: 0,
+                    opacity: 100,
+                    groupIds: [],
+                    strokeStyle: "solid",
+                    seed: 1,
+                    angle: 0,
+                    boundElements: null,
+                    updated: 1,
+                    link: null,
+                    locked: false
+                },
+                // Skill box
+                {
+                    type: "rectangle",
+                    version: 1,
+                    versionNonce: 1,
+                    id: "skill-box",
+                    x: 200,
+                    y: 320,
+                    width: 630,
+                    height: 90,
+                    angle: 0,
+                    strokeColor: "#1e4c92",
+                    backgroundColor: "#d5e5f5",
+                    fillStyle: "solid",
+                    strokeWidth: 3,
+                    roughness: 0,
+                    opacity: 100,
+                    groupIds: [],
+                    strokeStyle: "solid",
+                    seed: 1,
+                    boundElements: [],
+                    updated: 1,
+                    link: null,
+                    locked: false,
+                    roundness: { type: 3, value: 15 }
+                },
+                // Skill text
+                {
+                    type: "text",
+                    version: 1,
+                    versionNonce: 1,
+                    id: "skill-text",
+                    x: 470,
+                    y: 350,
+                    width: 90,
+                    height: 30,
+                    fontSize: 28,
+                    fontFamily: 1,
+                    text: "[Skill]",
+                    textAlign: "center",
+                    verticalAlign: "middle",
+                    baseline: 28,
+                    strokeColor: "#1e1e1e",
+                    backgroundColor: "transparent",
+                    fillStyle: "solid",
+                    strokeWidth: 2,
+                    roughness: 0,
+                    opacity: 100,
+                    groupIds: [],
+                    strokeStyle: "solid",
+                    seed: 1,
+                    angle: 0,
+                    boundElements: null,
+                    updated: 1,
+                    link: null,
+                    locked: false
+                },
+                // Arrow from SubAgent A to Skill
+                {
+                    type: "arrow",
+                    version: 1,
+                    versionNonce: 1,
+                    id: "arrow-a",
+                    x: 380,
+                    y: 230,
+                    width: 50,
+                    height: 80,
+                    angle: 0,
+                    strokeColor: "#1e4c92",
+                    backgroundColor: "transparent",
+                    fillStyle: "solid",
+                    strokeWidth: 4,
+                    roughness: 0,
+                    opacity: 100,
+                    groupIds: [],
+                    strokeStyle: "solid",
+                    seed: 1,
+                    startBinding: null,
+                    endBinding: null,
+                    points: [[0, 0], [50, 80]],
+                    lastCommittedPoint: null,
+                    startArrowhead: null,
+                    endArrowhead: "arrow",
+                    updated: 1,
+                    link: null,
+                    locked: false
+                },
+                // Arrow from SubAgent B to Skill
+                {
+                    type: "arrow",
+                    version: 1,
+                    versionNonce: 1,
+                    id: "arrow-b",
+                    x: 650,
+                    y: 230,
+                    width: -50,
+                    height: 80,
+                    angle: 0,
+                    strokeColor: "#1e4c92",
+                    backgroundColor: "transparent",
+                    fillStyle: "solid",
+                    strokeWidth: 4,
+                    roughness: 0,
+                    opacity: 100,
+                    groupIds: [],
+                    strokeStyle: "solid",
+                    seed: 1,
+                    startBinding: null,
+                    endBinding: null,
+                    points: [[0, 0], [-50, 80]],
+                    lastCommittedPoint: null,
+                    startArrowhead: null,
+                    endArrowhead: "arrow",
+                    updated: 1,
+                    link: null,
+                    locked: false
+                },
+                // Point 1
+                {
+                    type: "text",
+                    version: 1,
+                    versionNonce: 1,
+                    id: "point1",
+                    x: 100,
+                    y: 450,
+                    width: 800,
+                    height: 80,
+                    fontSize: 20,
+                    fontFamily: 1,
+                    text: "1. 責任の明確化 (Clear Separation of Responsibility)\n  • `SubAgents` = タスク実行エンジン (Task Execution Engine)\n  • `Skills` = 専門知識データベース (Knowledge Database)",
+                    textAlign: "left",
+                    verticalAlign: "top",
+                    baseline: 20,
+                    strokeColor: "#1e1e1e",
+                    backgroundColor: "transparent",
+                    fillStyle: "solid",
+                    strokeWidth: 2,
+                    roughness: 0,
+                    opacity: 100,
+                    groupIds: [],
+                    strokeStyle: "solid",
+                    seed: 1,
+                    angle: 0,
+                    boundElements: null,
+                    updated: 1,
+                    link: null,
+                    locked: false
+                },
+                // Point 2
+                {
+                    type: "text",
+                    version: 1,
+                    versionNonce: 1,
+                    id: "point2",
+                    x: 100,
+                    y: 560,
+                    width: 900,
+                    height: 60,
+                    fontSize: 20,
+                    fontFamily: 1,
+                    text: "2. コンテキストの最大効率化 (Maximum Context Efficiency)\nSubAgentの独立環境内でのみSkillsが展開され、メインのコンテキストは汚染されない。",
+                    textAlign: "left",
+                    verticalAlign: "top",
+                    baseline: 20,
+                    strokeColor: "#1e1e1e",
+                    backgroundColor: "transparent",
+                    fillStyle: "solid",
+                    strokeWidth: 2,
+                    roughness: 0,
+                    opacity: 100,
+                    groupIds: [],
+                    strokeStyle: "solid",
+                    seed: 1,
+                    angle: 0,
+                    boundElements: null,
+                    updated: 1,
+                    link: null,
+                    locked: false
+                },
+                // Point 3
+                {
+                    type: "text",
+                    version: 1,
+                    versionNonce: 1,
+                    id: "point3",
+                    x: 100,
+                    y: 650,
+                    width: 900,
+                    height: 60,
+                    fontSize: 20,
+                    fontFamily: 1,
+                    text: "3. 再利用性の向上 (Enhanced Reusability)\n同じSkillを複数の専門SubAgent（市場調査、競合分析など）で共有できる。",
+                    textAlign: "left",
+                    verticalAlign: "top",
+                    baseline: 20,
+                    strokeColor: "#1e1e1e",
+                    backgroundColor: "transparent",
+                    fillStyle: "solid",
+                    strokeWidth: 2,
+                    roughness: 0,
+                    opacity: 100,
+                    groupIds: [],
+                    strokeStyle: "solid",
+                    seed: 1,
+                    angle: 0,
+                    boundElements: null,
+                    updated: 1,
+                    link: null,
+                    locked: false
+                }
+            ],
+            appState: {
+                viewBackgroundColor: "#f5f5f5",
+                currentItemFontFamily: 1,
+                gridSize: null
+            },
+            scrollToContent: true
+        };
+
+        function App() {
+            return React.createElement(
+                'div',
+                { className: 'excalidraw-wrapper' },
+                React.createElement(Excalidraw, {
+                    initialData: initialData,
+                    UIOptions: {
+                        canvasActions: {
+                            loadScene: false
+                        }
+                    }
+                })
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
+    </script>
+</body>
+</html>
